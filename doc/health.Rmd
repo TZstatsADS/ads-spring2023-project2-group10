@@ -36,6 +36,7 @@ hospitalize
 
 
 ```{r}
+library(shiny)
 # Define UI ----
 ui <- fluidPage(
 
