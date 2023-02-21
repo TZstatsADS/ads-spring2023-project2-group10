@@ -111,7 +111,7 @@ body <- dashboardBody(
                     
                     
                     # Input: Select for the borough ----
-                    selectInput(inputId = "Borough",
+                    selectInput(inputId = "Boroughs",
                                 label = "Choose a borough:",
                                 choices = c("Manhattan", "Bronx", "Brooklyn", "Queens"))
                     
@@ -119,6 +119,12 @@ body <- dashboardBody(
                 
                 # Main panel for displaying outputs ----
                 mainPanel(
+                  # Output: Plot on Salary----
+                  plotOutput(outputId = "salary_plot"),
+                  
+                  # Output: Plot on working hours  ----
+                  plotOutput(outputId = "work_plot"),
+                  plotOutput(outputId = "leave_plot")
                     
                 )
             )

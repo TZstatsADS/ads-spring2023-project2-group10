@@ -48,7 +48,10 @@ QN_pop <- 2422938
 SI_pop <- 493494
 BK_pop <- 2712360
 ##### data scleaning for payroll data
-
+Bx_swl <- read.csv('../data/Bronx_plot.csv',stringsAsFactors = FALSE)
+Bk_swl <- read.csv('../data/Brooklyn_plot.csv',stringsAsFactors = FALSE)
+Mh_swl <- read.csv('../data/Manhattan_plot.csv',stringsAsFactors = FALSE)
+Qn_swl <- read.csv('../data/Queens_plot.csv',stringsAsFactors = FALSE)
 
 
 shinyServer(function(input, output) {
@@ -187,6 +190,50 @@ shinyServer(function(input, output) {
       geom_bar(stat = "identity", position = "dodge")
   })
   
+  swldata <- reactive({
+    if ( "Manhattan" %in% input$Boroughs){
+      data = Mh_swl
+      return(data) 
+    }
+    if ( "Bronx" %in% input$Boroughs){
+      data = Bx_swl
+      return(data) 
+    }
+    if ( "Brooklyn" %in% input$Boroughs){
+      data = Bk_swl
+      return(data) 
+    }
+    if ( "Queens" %in% input$Boroughs){
+      data = Qn_swl
+      return(data) 
+    }
+  })
+  
+  output$salary_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`mean.Total_Salary.`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean Salary of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
+      ylab("Mean Salary in $") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  
+  output$work_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  output$leave_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Percent_Leave`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })  
 })
   ####################### Salary and Worktime ##################       
   
