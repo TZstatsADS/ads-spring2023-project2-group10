@@ -8,6 +8,14 @@ library(choroplethrZip)
 library(shiny)
 
 # FUNCTION
+yearstring <- function(yr){
+  if (yr%%1 == 0){
+    return(paste("Jan 1",yr))
+  }
+  else{
+    return(paste("Jul 1",yr-0.5))
+  }
+}
 
 generate_choropleth <- function(input_value) {
   # Filter the dataset based on the input value
@@ -15,7 +23,7 @@ generate_choropleth <- function(input_value) {
   
   # Create the choropleth map
   zip_choropleth(df,
-                 title = "Active business licenses by ZIP code",
+                 title = paste("Active business licenses by ZIP code as of",yearstring(input_value)),
                  legend = "Quantity",
                  num_colors = 1,
                  county_zoom = 36061)   
