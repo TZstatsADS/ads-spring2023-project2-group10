@@ -1,41 +1,14 @@
-#
-# This is the server logic of a Shiny web application. You can run the
-# application by clicking 'Run App' above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-###############################Install Related Packages #######################
-if (!require("shiny")) {
-    install.packages("shiny")
-    library(shiny)
-}
-if (!require("leaflet")) {
-    install.packages("leaflet")
-    library(leaflet)
-}
-if (!require("leaflet.extras")) {
-    install.packages("leaflet.extras")
-    library(leaflet.extras)
-}
-if (!require("dplyr")) {
-    install.packages("dplyr")
-    library(dplyr)
-}
-if (!require("magrittr")) {
-    install.packages("magrittr")
-    library(magrittr)
-}
-if (!require("mapview")) {
-    install.packages("mapview")
-    library(mapview)
-}
-if (!require("leafsync")) {
-    install.packages("leafsync")
-    library(leafsync)
-}
-##### data cleaning for health data
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(shiny)
+library(ggplot2)
+```
+
+```{r}
 health <- read.csv("../data/health_clean_data.csv", stringsAsFactors = FALSE)
 plot_data <- read.csv("../data/ggplot_data.csv", stringsAsFactors = FALSE)
 plot_wei_data <- read.csv("../data/ggplot_weighted_data.csv", stringsAsFactors = FALSE)
@@ -47,15 +20,55 @@ BX_pop <- 1481409
 QN_pop <- 2422938
 SI_pop <- 493494
 BK_pop <- 2712360
-##### data scleaning for payroll data
+```
 
+```{r}
+ui <- fluidPage(
 
+  # App title ----
+  titlePanel("Health Issue"),
 
-shinyServer(function(input, output) {
- 
- 
-  ####################### Tab Health ##################
-  
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Select for the borough ----
+      selectInput(inputId = "borough",
+                  label = "Choose a borough:",
+                  choices = c("Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island", "All")),
+      selectInput(inputId = "weight",
+                  label = "Whether the data is weighted by the population:",
+                  choices = c("Unweighted", "Weighted"))
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Plot on Covid case count ----
+      plotOutput(outputId = "case_plot"),
+      
+      # Output: Plot on hospitalization count ----
+      plotOutput(outputId = "hosp_plot"),
+      
+      # Output: Plot on death count ----
+      plotOutput(outputId = "death_plot"),
+      
+      # Output: Barplot on 2020 cumulative counts
+      plotOutput(outputId = "barplot_2020"),
+      
+      # Output: Barplot on 2021 cumulative counts
+      plotOutput(outputId = "barplot_2021"),
+      
+      # Output: Barplot on 2022 cumulative counts
+      plotOutput(outputId = "barplot_2022")
+
+    )
+  )
+)
+
+server <- function(input, output) {
   data <- reactive({
     res2020 <- apply(health[health$date_of_interest< "2021-01-01", -1], 
                      2, sum)
@@ -151,7 +164,7 @@ shinyServer(function(input, output) {
     data_list = data()
     ggplot(data = data_list[[1]], aes(x=date, y=case)) +
       geom_line(aes(colour=borough))
-    
+
   })
   
   output$hosp_plot <- renderPlot({
@@ -187,10 +200,10 @@ shinyServer(function(input, output) {
       geom_bar(stat = "identity", position = "dodge")
   })
   
-})
-  ####################### Salary and Worktime ##################       
-  
-  
- 
+}
+shinyApp(ui, server)
+
+```
+
 
 

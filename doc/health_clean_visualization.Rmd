@@ -1,0 +1,284 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+```
+
+```{r}
+health <- read.csv("COVID-19_Daily_Counts_of_Cases__Hospitalizations__and_Deaths.csv", stringsAsFactors = FALSE)
+colnames(health) <- gsub("BX", "Bronx", colnames(health))
+colnames(health) <- gsub("BK", "Brooklyn", colnames(health))
+colnames(health) <- gsub("QN", "Queens", colnames(health))
+colnames(health) <- gsub("SI", "StatenIsland", colnames(health))
+colnames(health) <- gsub("MN", "Manhattan", colnames(health))
+
+health <- health[, !grepl("PROBABLE|_7DAY", colnames(health))]
+head(health)
+
+# Population in thousands in 2021
+MN_pop <- 1576876
+BX_pop <- 1481409
+QN_pop <- 2422938
+SI_pop <- 493494
+BK_pop <- 2712360
+```
+
+```{r}
+case_count <- health[, c(1, grep("_CASE_COUNT$", colnames(health)))]
+hospitalized <- health[, c(1, grep("_HOSPITALIZED_COUNT$", colnames(health)))]
+death <- health[, c(1, grep("DEATH_COUNT$", colnames(health)))]
+
+data = health[,c(1,grep('Manhattan_',colnames(health)))]
+hospitalize = data[,c(1,grep('HOSPITALIZED_COUNT',colnames(data)))]
+    plot(1:nrow(hospitalize), hospitalize[,2], type = "l", 
+     ylab = "Hospitalized Count", ylim = c(0, 10000), xaxt = "n", xlab = "")
+    axis(1, at = seq(1, nrow(hospitalized), 60),
+     labels = hospitalized$date_of_interest[seq(1, nrow(hospitalized), 60)], 
+     cex = 0.1, las = 2)
+```
+
+
+```{r}
+# Define UI ----
+ui <- fluidPage(
+
+  # App title ----
+  titlePanel("Health Issue"),
+
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Select for the borough ----
+      selectInput(inputId = "borough",
+                  label = "Choose a borough:",
+                  choices = c("Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island")),
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Plot on Covid case count ----
+      plotOutput(outputId = "case_plot"),
+      
+      # Output: Plot on hospitalization count ----
+      plotOutput(outputId = "hosp_plot"),
+      
+      # Output: Plot on death count ----
+      plotOutput(outputId = "death_plot")
+
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  data <- reactive({
+    if ( "Manhattan" %in% input$borough){
+      data = health[,c(1,grep('Manhattan_',colnames(health)))]
+      return(data) 
+    }
+    if ( "Bronx" %in% input$borough){
+      data = health[,c(1,grep('Bronx',colnames(health)))]
+      return(data) 
+    }
+    if ( "Brooklyn" %in% input$borough){
+      data = health[,c(1,grep('Brooklyn',colnames(health)))]
+      return(data) 
+    }
+    if ( "Queens" %in% input$borough){
+      data = health[,c(1,grep('Queens',colnames(health)))]
+      return(data) 
+    }
+    if ( "Staten Island" %in% input$borough){
+      data = health[,c(1,grep('StatenIsland',colnames(health)))]
+      return(data) 
+    }
+  })
+  
+  output$case_plot <- renderPlot({
+    data = data()
+    case = data[,c(1,grep('CASE_COUNT',colnames(data)))]
+    plot(1:nrow(case), case[,2], type = "l", 
+         main = paste("Number of Covid Cases in ",  input$borough, " from 2020 to 2022"),
+     ylab = "Case Count", ylim = c(0, 20000), xaxt = "n", xlab = "")
+    axis(1, at = seq(1, nrow(case_count), 60),
+     labels = case_count$date_of_interest[seq(1, nrow(case_count), 60)], 
+     cex = 0.1, las = 2)
+  })
+  
+  output$hosp_plot <- renderPlot({
+    data = data()
+    hospitalized = data[,c(1,grep('HOSPITALIZED_COUNT',colnames(data)))]
+    plot(1:nrow(hospitalized), hospitalized[,2], type = "l", 
+         main = paste("Number of Covid Hospitalization in ",  input$borough, " from 2020 to 2022"),
+     ylab = "Hospitalized Count", ylim = c(0, 700), xaxt = "n", xlab = "")
+    axis(1, at = seq(1, nrow(hospitalized), 60),
+     labels = hospitalized$date_of_interest[seq(1, nrow(hospitalized), 60)], 
+     cex = 0.1, las = 2)
+  })
+  
+  output$death_plot <- renderPlot({
+    data = data()
+    death = data[,c(1,grep('DEATH_COUNT',colnames(data)))]
+    plot(1:nrow(death), death[,2], type = "l", 
+         main = paste("Number of Covid Deaths in ",  input$borough, " from 2020 to 2022"),
+     ylab = "Death Count", ylim = c(0, 250), xaxt = "n", xlab = "")
+    axis(1, at = seq(1, nrow(case_count), 60),
+     labels = case_count$date_of_interest[seq(1, nrow(case_count), 60)], 
+     cex = 0.1, las = 2)
+  })
+  
+}
+shinyApp(ui, server)
+
+```
+
+
+```{r}
+plot(1:nrow(case_count), case_count$Bronx_CASE_COUNT, type = "l", 
+     ylab = "Case Count", ylim = c(0, 20000), xaxt = "n", xlab = "", main = 'Case Count of Covid 19')
+lines(1:nrow(case_count), case_count$Brooklyn_CASE_COUNT, col = 2)
+lines(1:nrow(case_count), case_count$Manhattan_CASE_COUNT, col = 3)
+lines(1:nrow(case_count), case_count$Queens_CASE_COUNT, col = 4)
+lines(1:nrow(case_count), case_count$StatenIsland_CASE_COUNT, col = 5)
+axis(1, at = seq(1, nrow(case_count), 60),
+     labels = case_count$date_of_interest[seq(1, nrow(case_count), 60)], 
+     cex = 0.1, las = 2)
+legend("topleft", c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"),
+       col = 1:5, lty = 1)
+```
+
+```{r}
+plot(1:nrow(hospitalized), hospitalized$Bronx_HOSPITALIZED_COUNT, type = "l", 
+     ylab = "Hospitalized Count", ylim = c(0,700), xaxt = "n", xlab = "Date")
+lines(1:nrow(hospitalized), hospitalized$Brooklyn_HOSPITALIZED_COUNT, col = 2)
+lines(1:nrow(hospitalized), hospitalized$Manhattan_HOSPITALIZED_COUNT, col = 3)
+lines(1:nrow(hospitalized), hospitalized$Queens_HOSPITALIZED_COUNT, col = 4)
+lines(1:nrow(hospitalized), hospitalized$StatenIsland_HOSPITALIZED_COUNT, col = 5)
+axis(1, at = seq(1, nrow(hospitalized), 60),
+     labels = hospitalized$date_of_interest[seq(1, nrow(hospitalized), 60)], 
+     cex = 0.1, las = 2)
+legend("topright", c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"),
+       col = 1:5, lty = 1)
+```
+
+```{r}
+plot(1:nrow(death), death$Bronx_DEATH_COUNT, type = "l", 
+     ylab = "Death Count", ylim = c(0, 250), xaxt = "n", xlab = "Date")
+lines(1:nrow(case_count), death$Brooklyn_DEATH_COUNT, col = 2)
+lines(1:nrow(case_count), death$Manhattan_DEATH_COUNT, col = 3)
+lines(1:nrow(case_count), death$Queens_DEATH_COUNT, col = 4)
+lines(1:nrow(case_count), death$StatenIsland_DEATH_COUNT, col = 5)
+axis(1, at = seq(1, nrow(case_count), 60),
+     labels = case_count$date_of_interest[seq(1, nrow(case_count), 60)], 
+     cex = 0.1, las = 2)
+legend("topright", c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"),
+       col = 1:5, lty = 1)
+```
+
+```{r}
+case_count$date_of_interest <- as.Date(data$date_of_interest, format = "%m/%d/%Y")
+death$date_of_interest <- as.Date(data$date_of_interest, format = "%m/%d/%Y")
+hospitalized$date_of_interest <- as.Date(data$date_of_interest, format = "%m/%d/%Y")
+```
+
+```{r}
+plot_data <- data.frame(date = rep(case_count$date_of_interest, 5),
+                        borough = rep(c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"), each = nrow(data)),
+                        case = as.vector(unlist(case_count[, -1])),
+                        death = as.vector(unlist(death[, -c(1, 2)])),
+                        hospitalized = as.vector(unlist(hospitalized[, -1])),
+                        stringsAsFactors = FALSE)
+# write.csv(plot_data, "ggplot_data.csv")
+ggplot(data = plot_data, aes(x=date, y=case)) + geom_line(aes(colour=borough))
+ggplot(data = plot_data, aes(x=date, y=death)) + geom_line(aes(colour=borough))
+ggplot(data = plot_data, aes(x=date, y=hospitalized)) + geom_line(aes(colour=borough))
+```
+
+
+```{r}
+# Weight the data using the borough population
+weighted_case_count <- case_count
+weighted_case_count$Bronx_CASE_COUNT <- weighted_case_count$Bronx_CASE_COUNT/BX_pop
+weighted_case_count$Brooklyn_CASE_COUNT <- weighted_case_count$Brooklyn_CASE_COUNT/BK_pop
+weighted_case_count$Manhattan_CASE_COUNT <- weighted_case_count$Manhattan_CASE_COUNT/MN_pop
+weighted_case_count$Queens_CASE_COUNT <- weighted_case_count$Queens_CASE_COUNT/QN_pop
+weighted_case_count$StatenIsland_CASE_COUNT <- weighted_case_count$StatenIsland_CASE_COUNT/SI_pop
+
+weighted_death <- death
+weighted_death$DEATH_COUNT <- weighted_death$DEATH_COUNT/sum(BX_pop, BK_pop, MN_pop, QN_pop, SI_pop)
+weighted_death$Bronx_DEATH_COUNT <- weighted_death$Bronx_DEATH_COUNT/BX_pop
+weighted_death$Brooklyn_DEATH_COUNT <- weighted_death$Brooklyn_DEATH_COUNT/BK_pop
+weighted_death$Manhattan_DEATH_COUNT <- weighted_death$Manhattan_DEATH_COUNT/MN_pop
+weighted_death$Queens_DEATH_COUNT <- weighted_death$Queens_DEATH_COUNT/QN_pop
+weighted_death$StatenIsland_DEATH_COUNT <- weighted_death$StatenIsland_DEATH_COUNT/SI_pop
+
+weighted_hospitalized <- hospitalized
+weighted_hospitalized$Bronx_HOSPITALIZED_COUNT <- weighted_hospitalized$Bronx_HOSPITALIZED_COUNT/BX_pop
+weighted_hospitalized$Brooklyn_HOSPITALIZED_COUNT <- weighted_hospitalized$Brooklyn_HOSPITALIZED_COUNT/BK_pop
+weighted_hospitalized$Manhattan_HOSPITALIZED_COUNT <- weighted_hospitalized$Manhattan_HOSPITALIZED_COUNT/MN_pop
+weighted_hospitalized$Queens_HOSPITALIZED_COUNT <- weighted_hospitalized$Queens_HOSPITALIZED_COUNT/QN_pop
+weighted_hospitalized$StatenIsland_HOSPITALIZED_COUNT <- weighted_hospitalized$StatenIsland_HOSPITALIZED_COUNT/SI_pop
+```
+
+```{r}
+plot_weighted_data <- data.frame(date = rep(case_count$date_of_interest, 5),
+                        borough = rep(c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"), each = nrow(data)),
+                        case = as.vector(unlist(weighted_case_count[, -1])),
+                        death = as.vector(unlist(weighted_death[, -c(1, 2)])),
+                        hospitalized = as.vector(unlist(weighted_hospitalized[, -1])),
+                        stringsAsFactors = FALSE)
+#write.csv(plot_weighted_data, "ggplot_weighted_data.csv")
+ggplot(data = plot_weighted_data, aes(x=date, y=case)) + geom_line(aes(colour=borough))
+ggplot(data = plot_weighted_data, aes(x=date, y=death)) + geom_line(aes(colour=borough))
+ggplot(data = plot_weighted_data, aes(x=date, y=hospitalized)) + geom_line(aes(colour=borough))
+```
+
+
+```{r}
+# 2020 statistics
+list_2020 <- list(case_count[case_count$date_of_interest < "2021-01-01", ], death[death$date_of_interest < "2021-01-01", ], hospitalized[hospitalized$date_of_interest < "2021-01-1", ]) %>% reduce(inner_join, by = "date_of_interest")
+res <- apply(list_2020[, -1], 2, sum)
+sum_2020 <- data.frame(borough = rep(c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"), 3), total_count = res[-6], type = rep(c("Case", "Death", "Hospitalized"), each = 5))
+weighted_sum_2020 <- sum_2020
+weighted_sum_2020$total_count <- weighted_sum_2020$total_count / rep(c(BX_pop, BK_pop, MN_pop, QN_pop, SI_pop), 3)
+ggplot(sum_2020, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+ggplot(weighted_sum_2020, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+```
+
+```{r}
+# 2021 statistics
+list_2021 <- list(case_count[case_count$date_of_interest < "2022-01-01" & case_count$date_of_interest >= "2021-01-01", ],
+                  death[case_count$date_of_interest < "2022-01-01" & case_count$date_of_interest >= "2021-01-01", ],
+                  hospitalized[case_count$date_of_interest < "2022-01-01" & case_count$date_of_interest >= "2021-01-01", ]) %>% 
+  reduce(inner_join, by = "date_of_interest")
+res2 <- apply(list_2021[, -1], 2, sum)
+sum_2021 <- data.frame(borough = rep(c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"), 3), total_count = res2[-6], type = rep(c("Case", "Death", "Hospitalized"), each = 5))
+weighted_sum_2021 <- sum_2021
+weighted_sum_2021$total_count <- weighted_sum_2021$total_count / rep(c(BX_pop, BK_pop, MN_pop, QN_pop, SI_pop), 3)
+ggplot(sum_2021, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+ggplot(weighted_sum_2021, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+```
+
+```{r}
+list_2022 <- list(case_count[case_count$date_of_interest >= "2022-01-01", ],
+                  death[case_count$date_of_interest >= "2022-01-01", ],
+                  hospitalized[case_count$date_of_interest >= "2022-01-01", ]) %>% 
+  reduce(inner_join, by = "date_of_interest")
+res3 <- apply(list_2022[, -1], 2, sum)
+sum_2022 <- data.frame(borough = rep(c("Bronx", "Brooklyn", "Manhattan", "Queens", "Staten Island"), 3), total_count = res3[-6], type = rep(c("Case", "Death", "Hospitalized"), each = 5))
+weighted_sum_2022 <- sum_2022
+weighted_sum_2022$total_count <- weighted_sum_2022$total_count / rep(c(BX_pop, BK_pop, MN_pop, QN_pop, SI_pop), 3)
+ggplot(sum_2022, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+ggplot(weighted_sum_2022, aes(x = factor(borough), y = total_count, fill = type, colour = type)) + geom_bar(stat = "identity", position = "dodge")
+```
+
