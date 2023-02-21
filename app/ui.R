@@ -5,9 +5,9 @@ library(tibble)
 library(tidyverse)
 library(shinythemes)
 library(sf)
-library(RCurl)
-library(tmap)
-library(rgdal)
+#library(RCurl)
+#library(tmap)
+#library(rgdal)
 library(leaflet)
 library(shiny)
 library(shinythemes)
@@ -202,7 +202,7 @@ ui <- dashboardPage(
     dashboardSidebar(sidebarMenu(
         menuItem("Home", tabName = "Home", icon = icon("home")),
         menuItem("Map", tabName = "Map", icon = icon("compass")),
-        menuItem("Health Issue", tabName = "Health_Issue", icon = icon("dollar-sign")),
+        menuItem("Health Issue", tabName = "Health_Issue", icon = icon("yin-yang")),
         menuItem("Salary and Worktime", tabName = "Salary_Worktime", icon = icon("dollar-sign")),
         menuItem("Appendix", tabName = "Appendix", icon = icon("fas fa-asterisk"))
     )),

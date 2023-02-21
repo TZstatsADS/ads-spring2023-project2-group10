@@ -126,7 +126,7 @@ shinyServer(function(input, output) {
   ####################### Tab Health ##################
   
   data <- reactive({
-    res2020 <- apply(health[health$date_of_interest< "2021-01-01", -1], 
+    res2020 <- base::apply(health[health$date_of_interest< "2021-01-01", -1], 
                      2, sum)
     sum_2020 <- data.frame(borough = rep(c("Bronx", "Brooklyn", 
                                            "Manhattan", "Queens", 
@@ -134,7 +134,7 @@ shinyServer(function(input, output) {
                            total_count = res2020, 
                            type = rep(c("Case", "Death", 
                                         "Hospitalized"), each = 5))
-    res2021 <- apply(health[health$date_of_interest < "2022-01-01" 
+    res2021 <- base::apply(health[health$date_of_interest < "2022-01-01" 
                             & health$date_of_interest >= "2021-01-01", 
                             -1], 2, sum)
     sum_2021 <- data.frame(borough = rep(c("Bronx", "Brooklyn", 
@@ -143,7 +143,7 @@ shinyServer(function(input, output) {
                            total_count = res2021, 
                            type = rep(c("Case", "Death", 
                                         "Hospitalized"), each = 5))
-    res2022 <- apply(health[health$date_of_interest>= "2022-01-01", -1], 
+    res2022 <- base::apply(health[health$date_of_interest>= "2022-01-01", -1], 
                      2, sum)
     sum_2022 <- data.frame(borough = rep(c("Bronx", "Brooklyn", 
                                            "Manhattan", "Queens", 
