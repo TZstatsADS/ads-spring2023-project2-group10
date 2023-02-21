@@ -6,18 +6,19 @@ lop = read.csv("Cleaned_LOP_numeric_year.csv")
 library(choroplethr)
 library(choroplethrZip)
 library(shiny)
-# FUNCTION# CUSTOM gradient attempt
+
+# FUNCTION
 
 generate_choropleth <- function(input_value) {
   # Filter the dataset based on the input value
   df <- subset(lop, year == input_value)
   
   # Create the choropleth map
-  (zip_choropleth(df,
-                  title = "Active business licenses by ZIP code",
-                  legend = "Quantity",
-                  num_colors = 1,
-                  county_zoom = 36061) + scale_fill_gradient(limits = range(lop$value)))  #+ scale_color_manual(values=c("#004400", "#00FF90"))#+ scale_colour_brewer(palette = "Greens")
+  zip_choropleth(df,
+                 title = "Active business licenses by ZIP code",
+                 legend = "Quantity",
+                 num_colors = 1,
+                 county_zoom = 36061)   
   
 }
 
@@ -31,7 +32,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   output$choropleth <- renderPlot({
-    generate_choropleth(input$year) +  scale_fill_continuous(type = "viridis")
+    generate_choropleth(input$year) +  scale_fill_continuous(type = "viridis",limits=range(lop$value))
   })
 }
 
