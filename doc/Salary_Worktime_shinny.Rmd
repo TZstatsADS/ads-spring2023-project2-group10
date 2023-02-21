@@ -1,0 +1,128 @@
+---
+title: "proj2"
+output: html_document
+date: "2023-02-15"
+---
+
+```{r}
+# Shiny Tutorial: https://diane.shinyapps.io/Shiny_tutorial/
+```
+
+```{r}
+library(ggplot2)
+```
+
+
+```{r}
+drop <- c("First Name", "Last Name", "Mid Init",'Payroll Number','Agency Start Date','Pay Basis')
+payroll <- payroll[,!(names(payroll) %in% drop)]
+payroll
+```
+
+```{r}
+Bx_swl <- read.csv('../data/Bronx_plot.csv',stringsAsFactors = FALSE)
+Bk_swl <- read.csv('../data/Brooklyn_plot.csv',stringsAsFactors = FALSE)
+Mh_swl <- read.csv('../data/Manhattan_plot.csv',stringsAsFactors = FALSE)
+Qn_swl <- read.csv('../data/Queens_plot.csv',stringsAsFactors = FALSE)
+```
+
+```{r}
+library(shiny)
+# Define UI ----
+ui <- fluidPage(
+
+  # App title ----
+  titlePanel("Salary, Working Time, and Leaving Status"),
+
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Select for the borough ----
+      selectInput(inputId = "borough",
+                  label = "Choose a borough:",
+                  choices = c("Manhattan", "Bronx", "Brooklyn", "Queens")),
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Plot on Salary----
+      plotOutput(outputId = "salary_plot"),
+      
+      # Output: Plot on working hours  ----
+      plotOutput(outputId = "work_plot"),
+      plotOutput(outputId = "leave_plot")
+      
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  swldata <- reactive({
+    if ( "Manhattan" %in% input$borough){
+      data = Mh_swl
+      return(data) 
+    }
+    if ( "Bronx" %in% input$borough){
+      data = Bx_swl
+      return(data) 
+    }
+    if ( "Brooklyn" %in% input$borough){
+      data = Bk_swl
+      return(data) 
+    }
+    if ( "Queens" %in% input$borough){
+      data = Qn_swl
+      return(data) 
+    }
+  })
+  
+  output$salary_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`mean.Total_Salary.`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean Salary of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean Salary in $") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  
+  output$work_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  output$leave_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Percent_Leave`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+
+}
+shinyApp(ui, server)
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
