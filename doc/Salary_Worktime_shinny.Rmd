@@ -1,0 +1,290 @@
+---
+title: "proj2"
+output: html_document
+date: "2023-02-15"
+---
+
+```{r}
+# Shiny Tutorial: https://diane.shinyapps.io/Shiny_tutorial/
+```
+
+```{r}
+library(readr)
+data <- '../data/Citywide_Payroll_Data__Fiscal_Year_.csv'
+payroll <- read_csv(data)
+```
+
+
+```{r}
+drop <- c("First Name", "Last Name", "Mid Init",'Payroll Number','Agency Start Date','Pay Basis')
+payroll <- payroll[,!(names(payroll) %in% drop)]
+payroll
+```
+
+```{r}
+colnames(payroll) <- c("Fiscal_Year","Agency_Name","Work_Location_Borough","Title_Description","Leave_Status_as_of_June30","Base_Salary","Regular_Hours","Regular_Gross_Paid","OT_Hours","Total_OT_Paid","Total_Other_Paid")
+```
+
+```{r}
+payroll_cleaned <- subset(payroll, Work_Location_Borough %in% c("MANHATTAN","BRONX","QUEENS","BROOKLYN","Bronx","Queens","Manhattan"))
+payroll_cleaned
+```
+
+```{r}
+Bronx <- subset(payroll_cleaned, Work_Location_Borough %in% c("BRONX","Bronx"))
+Manhattan <- subset(payroll_cleaned, Work_Location_Borough %in% c("Manhattan","MANHATTAN"))
+Queens <- subset(payroll_cleaned, Work_Location_Borough %in% c("QUEENS","Queens"))
+Brooklyn <- subset(payroll_cleaned, Work_Location_Borough %in% c("BROOKLYN"))
+```
+
+```{r}
+agency_table <- table(Bronx$Agency_Name)
+sorted_table <- sort(agency_table, decreasing = TRUE)
+top_10_agencies <- head(sorted_table, 10)
+top_10_agencies <- names(top_10_agencies)
+Bronx_filter <- Bronx[Bronx$Agency_Name %in% top_10_agencies,]
+Bronx_filter["Total_Salary"] <- Bronx_filter["Regular_Gross_Paid"]+Bronx_filter["Total_OT_Paid"]+Bronx_filter["Total_Other_Paid"]
+Bronx_filter["Total_Hours"] <- Bronx_filter["Regular_Hours"]+Bronx_filter["OT_Hours"]
+```
+
+```{r}
+agency_table <- table(Manhattan$Agency_Name)
+sorted_table <- sort(agency_table, decreasing = TRUE)
+top_10_agencies <- head(sorted_table, 10)
+top_10_agencies <- names(top_10_agencies)
+Manhattan_filter <- Manhattan[Manhattan$Agency_Name %in% top_10_agencies,]
+Manhattan_filter["Total_Salary"] <- Manhattan_filter["Regular_Gross_Paid"]+Manhattan_filter["Total_OT_Paid"]+Manhattan_filter["Total_Other_Paid"]
+Manhattan_filter["Total_Hours"] <- Manhattan_filter["Regular_Hours"] + Manhattan_filter["OT_Hours"]
+
+```
+
+```{r}
+agency_table <- table(Queens$Agency_Name)
+sorted_table <- sort(agency_table, decreasing = TRUE)
+top_10_agencies <- head(sorted_table, 10)
+top_10_agencies <- names(top_10_agencies)
+Queens_filter <- Queens[Queens$Agency_Name %in% top_10_agencies,]
+Queens_filter["Total_Salary"] <- Queens_filter["Regular_Gross_Paid"]+Queens_filter["Total_OT_Paid"]+Queens_filter["Total_Other_Paid"]
+Queens_filter["Total_Hours"] <- Queens_filter["Regular_Hours"] + Queens_filter["OT_Hours"]
+
+```
+
+```{r}
+agency_table <- table(Brooklyn$Agency_Name)
+sorted_table <- sort(agency_table, decreasing = TRUE)
+top_10_agencies <- head(sorted_table, 10)
+top_10_agencies <- names(top_10_agencies)
+Brooklyn_filter <- Brooklyn[Brooklyn$Agency_Name %in% top_10_agencies,]
+Brooklyn_filter["Total_Salary"] <- Brooklyn_filter["Regular_Gross_Paid"]+Brooklyn_filter["Total_OT_Paid"]+Brooklyn_filter["Total_Other_Paid"]
+Brooklyn_filter["Total_Hours"] <- Brooklyn_filter["Regular_Hours"] + Brooklyn_filter["OT_Hours"]
+
+```
+
+```{r}
+library(dplyr)
+Bronx_df <- Bronx_filter %>%
+              group_by(Agency_Name, Fiscal_Year) %>%
+              summarize(mean(Total_Salary),Total_Hours = mean(Total_Hours),
+                        Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+Bronx_df
+```
+
+```{r}
+Manhattan_df <- Manhattan_filter %>%
+                  group_by(Agency_Name, Fiscal_Year) %>%
+                  summarize(mean(Total_Salary),Total_Hours = mean(Total_Hours),
+                            Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+
+```
+
+```{r}
+Queens_df <- Queens_filter %>%
+                group_by(Agency_Name, Fiscal_Year) %>%
+                summarize(mean(Total_Salary),Total_Hours = mean(Total_Hours),
+                          Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+
+```
+
+```{r}
+Brooklyn_df <- Brooklyn_filter %>%
+                  group_by(Agency_Name,Fiscal_Year) %>%
+                  summarize(mean(Total_Salary),Total_Hours = mean(Total_Hours),
+                            Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+```
+
+```{r}
+write.csv(Bronx_df,"../data/Bronx_plot.csv")
+write.csv(Brooklyn_df,"../data/Brooklyn_plot.csv")
+write.csv(Manhattan_df,"../data/Manhattan_plot.csv")
+write.csv(Queens_df,"../data/Queens_plot.csv")
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(data = Brooklyn_df, aes(x=Fiscal_Year, y=`mean(Total_Salary)`, col=Agency_Name)) +
+  geom_line()
+```
+
+
+```{r}
+ggplot(data = Bronx_df, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+  geom_line()
+ggplot(data = Manhattan_data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+  geom_line()
+ggplot(data = Queens_data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+  geom_line()
+ggplot(data = Brooklyn_data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+  geom_line()
+```
+
+```{r}
+Bronx_status <- Bronx_filter %>%
+                group_by(Agency_Name,Fiscal_Year) %>%
+                summarize(Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+Manhattan_status <- Manhattan_filter %>%
+                group_by(Agency_Name,Fiscal_Year) %>%
+                summarize(Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+Brooklyn_status <- Brooklyn_filter %>%
+                group_by(Agency_Name,Fiscal_Year) %>%
+                summarize(Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+Queens_status <- Queens_filter %>%
+                group_by(Agency_Name,Fiscal_Year) %>%
+                summarize(Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+```
+
+```{r}
+ggplot(data = Bronx_df, aes(x=Fiscal_Year, y=Percent_Leave, col=Agency_Name)) +
+  geom_line()
+```
+
+```{r}
+status <- payroll_cleaned %>%
+                group_by(Work_Location_Borough,Fiscal_Year) %>%
+                summarize(Percent_Leave = sum(Leave_Status_as_of_June30 != "ACTIVE")/n())
+ggplot(data = status, aes(x=Fiscal_Year, y=`Percent_Leave`, col=Work_Location_Borough)) +
+  geom_line()
+```
+
+```{r}
+Bx_swl <- read.csv('../data/Bronx_plot.csv')
+Bk_swl <- read.csv('../data/Brooklyn_plot.csv',stringsAsFactors = FALSE)
+Mh_swl <- read.csv('../data/Manhattan_plot.csv',stringsAsFactors = FALSE)
+Qn_swl <- read.csv('../data/Queens_plot.csv',stringsAsFactors = FALSE)
+```
+
+
+```{r}
+library(dplyr)
+library(ggplot2)
+ggplot(data = Bx_swl, aes(x=Fiscal_Year, y=`mean.Total_Salary.`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean Salary of 10 agencies in From 2014 to 2022')) +
+      ylab("Mean Salary in $") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+
+Bx_swl
+Bronx_df
+```
+
+
+```{r}
+library(shiny)
+# Define UI ----
+ui <- fluidPage(
+
+  # App title ----
+  titlePanel("Salary, Working Time, and Leaving Status"),
+
+  # Sidebar layout with input and output definitions ----
+  sidebarLayout(
+
+    # Sidebar panel for inputs ----
+    sidebarPanel(
+
+      # Input: Select for the borough ----
+      selectInput(inputId = "borough",
+                  label = "Choose a borough:",
+                  choices = c("Manhattan", "Bronx", "Brooklyn", "Queens")),
+    ),
+
+    # Main panel for displaying outputs ----
+    mainPanel(
+
+      # Output: Plot on Salary----
+      plotOutput(outputId = "salary_plot"),
+      
+      # Output: Plot on working hours  ----
+      plotOutput(outputId = "work_plot"),
+      plotOutput(outputId = "leave_plot")
+      
+    )
+  )
+)
+
+server <- function(input, output) {
+  
+  swldata <- reactive({
+    if ( "Manhattan" %in% input$borough){
+      data = Mh_swl
+      return(data) 
+    }
+    if ( "Bronx" %in% input$borough){
+      data = Bx_swl
+      return(data) 
+    }
+    if ( "Brooklyn" %in% input$borough){
+      data = Bk_swl
+      return(data) 
+    }
+    if ( "Queens" %in% input$borough){
+      data = Qn_swl
+      return(data) 
+    }
+  })
+  
+  output$salary_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`mean.Total_Salary.`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean Salary of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean Salary in $") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  
+  output$work_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+  output$leave_plot <- renderPlot({
+    data = swldata()
+    ggplot(data = data, aes(x=Fiscal_Year, y=`Percent_Leave`, col=Agency_Name)) +
+      geom_line() +
+      ggtitle(paste('Mean working time of 10 agencies in',input$borough,'From 2014 to 2022')) +
+      ylab("Mean working time in Hr") + 
+      geom_vline(xintercept = 2019, linetype = "dashed")
+  })
+
+}
+shinyApp(ui, server)
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
