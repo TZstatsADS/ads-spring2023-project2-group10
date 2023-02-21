@@ -35,6 +35,70 @@ if (!require("leafsync")) {
     install.packages("leafsync")
     library(leafsync)
 }
+
+#### Choropleth map functions ####
+lop = read.csv("../data/Cleaned_LOP_numeric_year.csv")
+
+
+# install_github('arilamstein/choroplethrZip@v1.5.0')
+
+library(choroplethr)
+library(choroplethrZip)
+library(shiny)
+library(ggplot2)
+
+# FUNCTION
+yearstring <- function(yr){
+  if (yr%%1 == 0){
+    return(paste("Jan 1",yr))
+  }
+  else{
+    return(paste("Jul 1",yr-0.5))
+  }
+}
+
+borougher <- function(br){
+  if ("All" %in% br){
+    return(c(36005, 36047, 36061, 36081, 36085))
+  }
+  else if ("Manhattan" %in% br){
+    return(36061)
+  }
+  else if ("Bronx" %in% br){
+    return(36005)
+  }
+  else if ("Brooklyn" %in% br){
+    return(36047)
+  }
+  else if ("Queens" %in% br){
+    return(36081)
+  }
+  else{
+    return(36085)
+  }
+}
+lop = read.csv("../data/Cleaned_LOP_numeric_year.csv")
+generate_choropleth <- function(input_value, bor) {
+  # Filter the dataset based on the input value
+  df <- subset(lop, year == input_value)
+  
+  # Create the choropleth map
+  zip_choropleth(df,
+                 title = paste("Active business licenses by ZIP code as of",yearstring(input_value)),
+                 legend = "Quantity",
+                 num_colors = 1,
+                 county_zoom = borougher(bor)) 
+  # Bronx, Brooklyn, New York, Queens, Staten Island
+  
+}
+
+
+
+
+####
+
+
+
 ##### data cleaning for health data
 health <- read.csv("../data/health_clean_data.csv", stringsAsFactors = FALSE)
 plot_data <- read.csv("../data/ggplot_data.csv", stringsAsFactors = FALSE)
@@ -55,7 +119,9 @@ Qn_swl <- read.csv('../data/Queens_plot.csv',stringsAsFactors = FALSE)
 
 
 shinyServer(function(input, output) {
- 
+  output$choropleth <- renderPlot({
+    generate_choropleth(input$year,input$map_borough) +  scale_fill_continuous(type = "viridis",limits=range(lop$value))
+  })
  
   ####################### Tab Health ##################
   

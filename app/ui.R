@@ -43,9 +43,23 @@ body <- dashboardBody(
             ))
         )), # end of home 
         # ------------------ Map-----------------------------------
-        tabItem(tabName = "Map",
-                h2("?", align = 'center'),
-                leafletOutput("nyc_map_covid", width = "100%", height = 800)
+        tabItem(tabName = "Map", fluidPage(
+          titlePanel("Choropleth Map"),
+          sidebarLayout(
+            
+            # Sidebar panel for inputs ----
+            sidebarPanel(
+              sliderInput("year", "Year", min = 2019.5, max = 2023, value = 2019.5,step=0.5),
+              # Input: Select for the borough ----
+              selectInput(inputId = "map_borough",
+                          label = "Choose a borough:",
+                          choices = c("All","Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island")),
+            ),
+            mainPanel("mainPanel",
+                      plotOutput("choropleth"))
+          )
+        )
+                
         ),
         
         #------------------Covid 19 Health Issues----------------------------

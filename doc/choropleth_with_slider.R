@@ -87,7 +87,7 @@ ui <- navbarPage("Pandemic consequences in NYC",
                      sidebarPanel(
                        sliderInput("year", "Year", min = 2019.5, max = 2023, value = 2019.5,step=0.5),
                        # Input: Select for the borough ----
-                       selectInput(inputId = "borough",
+                       selectInput(inputId = "map_borough",
                                    label = "Choose a borough:",
                                    choices = c("All","Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island")),
                      ),
@@ -105,7 +105,7 @@ ui <- navbarPage("Pandemic consequences in NYC",
 
 server <- function(input, output) {
   output$choropleth <- renderPlot({
-    generate_choropleth(input$year,input$borough) +  scale_fill_continuous(type = "viridis",limits=range(lop$value))
+    generate_choropleth(input$year,input$map_borough) +  scale_fill_continuous(type = "viridis",limits=range(lop$value))
   })
 }
 
