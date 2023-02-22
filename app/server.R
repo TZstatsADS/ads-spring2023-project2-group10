@@ -8,32 +8,32 @@
 #
 ###############################Install Related Packages #######################
 if (!require("shiny")) {
-    install.packages("shiny")
-    library(shiny)
+  install.packages("shiny")
+  library(shiny)
 }
 if (!require("leaflet")) {
-    install.packages("leaflet")
-    library(leaflet)
+  install.packages("leaflet")
+  library(leaflet)
 }
 if (!require("leaflet.extras")) {
-    install.packages("leaflet.extras")
-    library(leaflet.extras)
+  install.packages("leaflet.extras")
+  library(leaflet.extras)
 }
 if (!require("dplyr")) {
-    install.packages("dplyr")
-    library(dplyr)
+  install.packages("dplyr")
+  library(dplyr)
 }
 if (!require("magrittr")) {
-    install.packages("magrittr")
-    library(magrittr)
+  install.packages("magrittr")
+  library(magrittr)
 }
 if (!require("mapview")) {
-    install.packages("mapview")
-    library(mapview)
+  install.packages("mapview")
+  library(mapview)
 }
 if (!require("leafsync")) {
-    install.packages("leafsync")
-    library(leafsync)
+  install.packages("leafsync")
+  library(leafsync)
 }
 
 #### Choropleth map functions ####
@@ -46,6 +46,7 @@ library(choroplethr)
 library(choroplethrZip)
 library(shiny)
 library(ggplot2)
+library(rsconnect)
 
 # FUNCTION
 yearstring <- function(yr){
@@ -292,12 +293,13 @@ shinyServer(function(input, output) {
       ylab("Mean working time in Hr") + 
       geom_vline(xintercept = 2019, linetype = "dashed")
   })
+  
   output$leave_plot <- renderPlot({
     data = swldata()
     ggplot(data = data, aes(x=Fiscal_Year, y=`Percent_Leave`, col=Agency_Name)) +
       geom_line() +
-      ggtitle(paste('Mean working time of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
-      ylab("Mean working time in Hr") + 
+      ggtitle(paste('Resignation percentage of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
+      ylab("Resignation percentage") + 
       geom_vline(xintercept = 2019, linetype = "dashed")
   })  
 })

@@ -197,8 +197,8 @@ server <- function(input, output) {
     data = data()
     ggplot(data = data, aes(x=Fiscal_Year, y=`Total_Hours`, col=Agency_Name)) +
     geom_line() +
-    ggtitle(paste('Mean working time of 10 agencies in',input$borough),'From 2014 to 2022') +
-    ylab("Mean working time in Hr") + 
+    ggtitle(paste('Resignation percentage of 10 agencies in',input$borough),'From 2014 to 2022') +
+    ylab("Resignation percentage") + 
     geom_vline(xintercept = 2019, linetype = "dashed")
   })
   

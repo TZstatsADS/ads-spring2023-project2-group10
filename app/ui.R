@@ -55,7 +55,7 @@ body <- dashboardBody(
                           label = "Choose a borough:",
                           choices = c("All","Manhattan", "Bronx", "Brooklyn", "Queens", "Staten Island")),
             ),
-            mainPanel("mainPanel",
+            mainPanel(
                       plotOutput("choropleth"))
           )
         )
