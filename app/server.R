@@ -300,7 +300,7 @@ shinyServer(function(input, output) {
       geom_line() +
       ggtitle(paste('Resignation percentage of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
       ylab("Resignation percentage") + 
-      geom_vline(xintercept = 2019, linetype = "dashed")
+      geom_vline(xintercept = 2020, linetype = "dashed")
   })  
 })
   ####################### Salary and Worktime ##################       

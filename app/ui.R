@@ -113,7 +113,7 @@ body <- dashboardBody(
         tabItem(tabName = "Salary_Worktime", fluidPage(
             
             # App title ----
-            titlePanel("Salary and Worktime"),
+            titlePanel("Salary and worktime related plots"),
             
             # Sidebar layout with input and output definitions ----
             sidebarLayout(
