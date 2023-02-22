@@ -150,21 +150,17 @@ body <- dashboardBody(
         # ------------------ Appendix --------------------------------
         tabItem(tabName = "Appendix", fluidPage( 
             HTML(
-                "<h2> Data Sources </h2>
-                <h4> <p><li>NYC Covid 19 Data: <a href='https://github.com/nychealth/coronavirus-data'>NYC covid 19 github database</a></li></h4>
-                <h4><li>NYC COVID-19 Policy : <a href='https://www1.nyc.gov/site/coronavirus/businesses/businesses-and-nonprofits.page' target='_blank'> NYC Citywide Information Portal</a></li></h4>
-                <h4><li>NYC Business data : <a href='https://data.cityofnewyork.us/Business/Legally-Operating-Businesses/w7w3-xahh' target='_blank'>NYC Open Data</a></li></h4>
-                <h4><li>NYC Business Application Data : <a href='https://data.cityofnewyork.us/Business/License-Applications/ptev-4hud' target='_blank'>NYC Open Data</a></li></h4>
-                <h4><li>NYC Minority Owned Business : <a href='https://data.cityofnewyork.us/Business/M-WBE-LBE-and-EBE-Certified-Business-List/ci93-uc8s' target='_blank'>NYC Health + Hospitals</a></li></h4>
-                <h4><li>NYC Geo Data : <a href='https://github.com/ResidentMario/geoplot-data-old' target='_blank'> Geoplot Github</a></li></h4>"
+              "<h2> Data Sources </h2>
+                <h4> <p><li>NYC Covid 19 Data: <a href='https://data.cityofnewyork.us/Health/COVID-19-Daily-Counts-of-Cases-Hospitalizations-an/rc75-m7u3'>NYC Open Data</a></li></h4>
+                <h4><li>NYC Legally Operating Business data : <a href='https://data.cityofnewyork.us/Business/Legally-Operating-Businesses/w7w3-xahh' target='_blank'>NYC Open Data</a></li></h4>
+                <h4><li>NYC Work Data : <a href='https://data.cityofnewyork.us/City-Government/Citywide-Payroll-Data-Fiscal-Year-/k397-673e' target='_blank'>NYC Open Data</a></li></h4>"
             ),
             
             titlePanel("Disclaimers "),
             
             HTML(
-                " <p>We drew our business insights from NYC Open data, specifically business expiration databases. We recognized that there would be a lag between when the business is closed and when the expiration date, status are updated.</p>",
-                " <p>Thus our app may understate the number of businesses that were actually closed. Furthermore, due to the lag between the time point where the business were closed, with when the expiration date be updated, there could be some uncertainty to define on which day, month the businesses were fully closed
- </p>"),
+              " <p>Our business and health insights were derived from the NYC Open data. However, we acknowledge that there may be a delay between the time a business start and when its license issued date are updated. As a result, our app may not fully reflect the actual number of active businesses.</p>",
+            ),
             
             titlePanel("Acknowledgement  "),
             
@@ -180,12 +176,12 @@ body <- dashboardBody(
             titlePanel("Contacts"),
             
             HTML(
-                " <p>For more information please feel free to contact</p>",
-                " <p>Wendy Doan(ad3801@columbia.edu) </p>",
-                " <p>Qizhen Yang(qy2446@columbia.edu)</p>",
-                " <p>Yandong Xiong(yx2659@columbia.edu) </p>",
-                " <p>TQiao Li(ql2403@columbia.edu)</p>",
-                " <p>James Smiley(jbs2253@columbia.edu) </p>")
+              " <p>For more information please feel free to contact</p>",
+              " <p>Brendan Ng, ln2495@columbia.edu</p>",
+              " <p>Haoyang Li, hl3625@columbia.edu</p>",
+              " <p>Jinghan Huang, jh4578@columbia.edu </p>",
+              " <p>Sicheng Zhou, sz3094@columbia.edu </p>",
+              " <p>Xinyu Zhu, xz3136@columbia.edu</p>")
         )) # end of tab
         
     ) # end of tab items
