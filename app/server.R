@@ -282,7 +282,7 @@ shinyServer(function(input, output) {
       geom_line() +
       ggtitle(paste('Mean Salary of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
       ylab("Mean Salary in $") + 
-      geom_vline(xintercept = 2019, linetype = "dashed")
+      geom_vline(xintercept = 2020, linetype = "dashed")
   })
   
   output$work_plot <- renderPlot({
@@ -291,7 +291,7 @@ shinyServer(function(input, output) {
       geom_line() +
       ggtitle(paste('Mean working time of 10 agencies in',input$Boroughs,'From 2014 to 2022')) +
       ylab("Mean working time in Hr") + 
-      geom_vline(xintercept = 2019, linetype = "dashed")
+      geom_vline(xintercept = 2020, linetype = "dashed")
   })
   
   output$leave_plot <- renderPlot({

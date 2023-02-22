@@ -44,7 +44,7 @@ body <- dashboardBody(
         )), # end of home 
         # ------------------ Map-----------------------------------
         tabItem(tabName = "Map", fluidPage(
-          titlePanel("Choropleth Map"),
+          titlePanel("Choropleth Map of Active Business Licenses"),
           sidebarLayout(
             
             # Sidebar panel for inputs ----
@@ -66,7 +66,7 @@ body <- dashboardBody(
         tabItem(tabName = "Health_Issue", fluidPage(
             
             # App title ----
-            titlePanel("Health Issue"),
+            titlePanel("COVID-related Health Issues"),
             
             # Sidebar layout with input and output definitions ----
             sidebarLayout(

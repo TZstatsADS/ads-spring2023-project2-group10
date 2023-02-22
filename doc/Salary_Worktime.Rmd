@@ -190,7 +190,7 @@ server <- function(input, output) {
     geom_line() +
     ggtitle(paste('Mean Salary of 10 agencies in',input$borough,'From 2014 to 2022')) +
     ylab("Mean Salary in $") + 
-    geom_vline(xintercept = 2019, linetype = "dashed")
+    geom_vline(xintercept = 2020, linetype = "dashed")
   })
   
   output$work_plot <- renderPlot({
@@ -199,7 +199,7 @@ server <- function(input, output) {
     geom_line() +
     ggtitle(paste('Resignation percentage of 10 agencies in',input$borough),'From 2014 to 2022') +
     ylab("Resignation percentage") + 
-    geom_vline(xintercept = 2019, linetype = "dashed")
+    geom_vline(xintercept = 2020, linetype = "dashed")
   })
   
 }
