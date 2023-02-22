@@ -24,20 +24,19 @@ body <- dashboardBody(
         
         tabItem(tabName = "Home", fluidPage(
             fluidRow(box(width = 15, title = "Introduction", status = "primary",
-                         solidHeader = TRUE, h3("Covid-19 and NYC business"),
-                         h4("By Wendy Doan, Qizhen Yang, Qiao Li, Yandong Xiong, James Bergin Smiley"),
-                         h5("Drawing data from multiple sources, this application provides insight into the economic impact of coronavirus 2019 (COVID-19) on New York’s city economy. The results shed light on both the financial fragility of many businesses, and the significant impact COVID-19 had on these businesses in the weeks after the COVID-19–related disruptions began."),
-                         h5("The application will mainly track down the change in the number of businesses being closed or newly opened across Covid timeline. We divided the businesses into 4 types:", strong("Retail, Service, Food and Beverage, Entertainment")))),
-            fluidRow(box(width = 15, title = "Targeted User", status = "primary", solidHeader=TRUE,
-                         h5("We believe that the application would be useful for anyone who are interested in learning more about the effects of Covid 19"))),
-            fluidRow(box(width = 15, title = "How to Use The App", status = "primary",
+                         solidHeader = TRUE, h3("Business and Salary Impact of COVID-19 in NYC"),
+                         h4("Project by Brendan, Xinyu, Jinghan, Sicheng, and Haoyang"),
+                         h5("This application visualizes business activity data, COVID-related data, and salary data to help the user see a holistic view of how the economy in NYC has changed in the context of COVID-19. Data was sourced from NYC Open Data."),
+                         )),
+            fluidRow(box(width = 15, title = "Intended Audience", status = "primary", solidHeader=TRUE,
+                         h5("Economists or researchers that are interested in economic trends throughout the past 4 years would be interested in using our application to identify overall patterns to dive deeper into. "))),
+            fluidRow(box(width = 15, title = "How to interpret the application", status = "primary",
                          solidHeader = TRUE,
-                         h5("The application is divided into 5 separate tabs"),
+                         h5("All of our visualizations can be filtered by borough, allowing users to focus on any particular borough of New York that they may be particularly interested in."),
                          tags$div(tags$ul(
-                             tags$li("The", strong("first"), "tab: Introduction"),
-                             tags$li("The", strong("second"), "tab: The detailed ZIP code map shows the extent of Covid 19 outbreak in NYC. It provided key information including: confirmed cases, infection rate, number of business that are closed in the neighborhood"),
-                             tags$li("The", strong("third and fourth"), "tab: stats on recently opened/ closed business during Covid 19, tracked separately for different industries"),
-                             tags$li("The", strong("fifth"),"tab: Appendix and data sources")
+                             tags$li("The choropleth map of business activity visualizes the amount of active business licenses in each ZIP code, and the slider allows the user to choose which year to visualize. It is apparent that after the pandemic hit, the amount of legally operating businesses throughout New York has decreased."),
+                             tags$li("The health issues tab gives an idea of how the pandemic has affected New York over time, and acts as a proxy for the severity of the pandemic. The weighted version shows case counts/deaths as a proportion of the borough’s population."),
+                             tags$li("The salary/worktime data visualizes how salaries have changed in major agencies over the years of the pandemic. These visualizations provide a high-level overview of whether there has been a change in salary trends before and after the pandemic.")
                              
                          ))
             ))
