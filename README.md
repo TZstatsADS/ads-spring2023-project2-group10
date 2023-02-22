@@ -2,7 +2,7 @@
 
 ### [Project Description](doc/project2_desc.md)
 
-![screenshot](doc/figs/1.jpeg)
+![screenshot](doc/figs/3.png)
 
 
 ## The Ripple Effects of COVID-19: A Comprehensive Look at its Impact on Health, Work, and Business 
