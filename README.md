@@ -8,6 +8,8 @@
 ## The Ripple Effects of COVID-19: A Comprehensive Look at its Impact on Health, Work, and Business 
 Term: Spring 2023
 
+
+
 + Team 10
 + **Team member** : 
 	+ Brendan Ng
@@ -28,6 +30,9 @@ Sicheng proposed a dataset, cleaned the data for Covid19 cases, developed the vi
 Jinghan developed the body of UI and server of the shinny app, assisted with cleaning and analyzing the Salary & Work_time & leave_status dataset, assisted with analyzing the health dataset.
 Xinyu cleaned and analyzed the Salary & Work_time & leave_status dataset, deployed the shinny app, and assisted with builing the UI.
 Haoyang assisted with analyzing the Salary&Work_time&leave_status dataset.
+
++ Shinny app: https://uxeg9f-jinghan-huang.shinyapps.io/group10project/ 
+You can also run the 'ui.R' or 'server.R' in app/ to use the app.
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
