@@ -1,0 +1,14 @@
+name: grp10_app
+title: grp10_app
+username:
+account: bernoid
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 8385918
+bundleId: 6876161
+url: https://bernoid.shinyapps.io/grp10_app/
+when: 1677098474.18107
+lastSyncTime: 1677098474.18109
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: README.md

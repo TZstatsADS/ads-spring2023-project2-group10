@@ -1,0 +1,14 @@
+ZipChoropleth           An R6 object for creating ZIP-level
+                        choropleths.
+df_pop_zip              A data.frame containing population estimates
+                        for US Zip Code Tabulated Areas (ZCTAs) in
+                        2012.
+df_zip_demographics     A data.frame containing demographic statistics
+                        for each Zip Code Tabulated Area (ZCTA).
+get_zip_demographics    Get a handful of demographic variables from the
+                        US Census Bureau as a data.frame.
+zip.map                 Map of US Zip Code Tabulated Areas (ZCTAs)
+zip.regions             Metadata about US Zip Code Tabulated Areas
+                        (ZCTAs)
+zip_choropleth          Create a choropleth of US Zip Codes
+zip_choropleth_acs      Create a US ZIP choropleth from ACS data
