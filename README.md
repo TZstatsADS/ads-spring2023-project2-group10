@@ -24,7 +24,7 @@ The salary/worktime data visualizes how salaries have changed in major agencies 
 
 + **Contribution statement**: 
 Brendan proposed a dataset, cleaned data for legally operating businesses, developed the choropleth map visualization, and assisted with building the UI.
-Sicheng proposed a dataset, cleaned the data for Covid19 cases, developed the analysis in Health Issue, and assisted with builing the UI. 
+Sicheng proposed a dataset, cleaned the data for Covid19 cases, developed the visualization analysis in Health Issue, and assisted with builing the UI. 
 Jinghan developed the body of UI and server of the shinny app, assisted with cleaning and analyzing the Salary & Work_time & leave_status dataset, assisted with analyzing the health dataset.
 Xinyu cleaned and analyzed the Salary & Work_time & leave_status dataset, deployed the shinny app, and assisted with builing the UI.
 Haoyang assisted with analyzing the Salary&Work_time&leave_status dataset.
