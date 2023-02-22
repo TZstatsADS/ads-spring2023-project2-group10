@@ -23,7 +23,7 @@ Brendan proposed a dataset, cleaned data for legally operating businesses, devel
 Sicheng proposed a dataset, cleaned the data for Covid19 cases, developed the analysis in Health Issue, and assisted with builing the UI. 
 Jinghan developed the body of UI and server of the shinny app, assisted with cleaning and analyzing the Salary & Work_time & leave_status dataset, assisted with analyzing the health dataset.
 Xinyu cleaned and analyzed the Salary & Work_time & leave_status dataset, assisted with builing the UI.
-Haoyang assisted with analyzing the Salary&Work_time$leave_status dataset.
+Haoyang assisted with analyzing the Salary&Work_time&leave_status dataset.
 
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
